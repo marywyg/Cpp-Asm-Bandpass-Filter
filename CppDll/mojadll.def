@@ -1,0 +1,2 @@
+LIBRARY CppDll
+EXPORTS AddNumbers
