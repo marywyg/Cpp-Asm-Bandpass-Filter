@@ -1,7 +1,7 @@
 # Bandpass filter using the FIR algorithm for sound files in WAV format
 This project is being made for Assembly Languages course on my 5th semester of Informatics.
 
-The program accepts a WAV file as input and processes it through functions in dynamic linked libraries written in C++ and Assembly. This is done in threads (max. 64, optimised based on an individual file) for faster processing. The program then creates a new file called "processed_sample.wav". **This program only runs on a x64 platform.**
+The program accepts a WAV file as input and processes it through functions in dynamic linked libraries written in C++ and Assembly. This is done in threads (max. 64, optimised based on an individual file) for faster processing. The program then creates a new file called "processed_sample.wav" where it saves results. **This program only runs on a x64 platform.**
 
 ## What has been done
 - Link between main application and DLLs
