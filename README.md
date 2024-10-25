@@ -1,1 +1,13 @@
-# SolBandpass
+# Bandpass filter using the FIR algorithm for sound files in WAV format
+This project is being made for Assembly Languages course on my 5th semester of Informatics.
+
+The program accepts a WAV file as input and processes it through functions in dynamic linked libraries written in C++ and Assembly. This is done in threads (max. 64, optimised based on an individual file) for faster processing. The program then creates a new file called "processed_sample.wav". 
+
+## What has been done
+- Link between main application and DLLs
+- Providing pointers to data for assembly function
+
+## What is not yet done
+- The FIR algorithm in assembly for applying bandpass filter
+- Multiple threads
+- Interface?
