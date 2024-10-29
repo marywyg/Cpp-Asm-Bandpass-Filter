@@ -1,2 +1,2 @@
 LIBRARY AsmDll
-EXPORTS MyProc1
+EXPORTS ModifyBitsAsm

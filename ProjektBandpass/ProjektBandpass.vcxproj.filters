@@ -19,4 +19,12 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\StarWars3.wav">
+      <Filter>Pliki zasobów</Filter>
+    </Media>
+    <Media Include="..\..\..\..\Downloads\file_example_WAV_1MG.wav">
+      <Filter>Pliki zasobów</Filter>
+    </Media>
+  </ItemGroup>
 </Project>
