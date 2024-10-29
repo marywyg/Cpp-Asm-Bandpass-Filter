@@ -82,9 +82,8 @@ void processWavFile(const std::string& inputFilePath, const std::string& outputF
     
     printRawData(audioData, "Raw Data Before Processing:", 10);
 
-    
-    size_t chunkSize = std::max(audioData.size() / 64, (size_t)1024);
-    size_t numChunks = (audioData.size() + chunkSize - 1) / chunkSize;
+    size_t chunkSize = audioData.size() / 3;
+    size_t numChunks = 3;
     std::vector<std::thread> threads;
 
     for (size_t i = 0; i < numChunks; ++i) {
