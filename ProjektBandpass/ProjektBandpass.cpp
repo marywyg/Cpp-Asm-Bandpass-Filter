@@ -3,74 +3,63 @@
 #include <vector>
 #include <thread>
 #include <iomanip>
-#include <cstdint>  
+#include <cstdint>
+#include <chrono>
 
-extern "C" void ModifyBitsAsm(double* chunkPointer);
+extern "C" void ModifyBitsAsm(float* chunkPointer, size_t numElements);
+extern "C" void ModifyBitsCpp(float* chunkPointer, size_t numElements);
 
-void processChunk(double* chunkPointer) {
-    std::cout << "Processing chunk at address: " << chunkPointer << std::endl;
-    ModifyBitsAsm(chunkPointer);
+void static processChunkAsm(float* chunkPointer, size_t numElements) {
+    ModifyBitsAsm(chunkPointer, numElements);
 }
 
-void printRawData(const std::vector<double>& data, const std::string& message, size_t numSamples = 10) {
-    std::cout << message << std::endl;
-    std::cout << "First " << numSamples << " samples:" << std::endl;
-    for (size_t i = 0; i < std::min(numSamples, data.size()); ++i) {
-        std::cout << std::hexfloat << data[i] << " ";
-    }
-    std::cout << std::endl;
-
-    if (data.size() > numSamples) {
-        std::cout << "Last " << numSamples << " samples:" << std::endl;
-        for (size_t i = data.size() - numSamples; i < data.size(); ++i) {
-            std::cout << std::hexfloat << data[i] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
+void static processChunkCpp(float* chunkPointer, size_t chunkSize) {
+    ModifyBitsCpp(chunkPointer, chunkSize);
 }
 
-void processWavFile(const std::string& inputFilePath, const std::string& outputFilePath) {
+std::vector<size_t> divideIntoChunks(size_t totalSize, size_t numChunks) {
+    std::vector<size_t> chunkSizes(numChunks, totalSize / numChunks);
+    size_t remainder = totalSize % numChunks;
+
+    for (size_t i = 0; i < remainder; ++i) {
+        chunkSizes[i]++;
+    }
+
+    return chunkSizes;
+}
+
+void processWavFile(const std::string& inputFilePath, const std::string& outputFilePath, size_t numThreads, int choice) {
     std::ifstream inputFile(inputFilePath, std::ios::binary);
     if (!inputFile) {
         std::cerr << "Could not open input file!" << std::endl;
         return;
     }
-
     
     char header[44];
     inputFile.read(header, 44);
 
-    
     int bitDepth = *reinterpret_cast<int16_t*>(&header[34]);
 
-    
     inputFile.seekg(0, std::ios::end);
     std::streamoff fileSize = inputFile.tellg();
     size_t dataSize = static_cast<size_t>(fileSize) - 44;
     inputFile.seekg(44, std::ios::beg);
 
-    std::vector<double> audioData;
+    std::vector<float> audioData;
     if (bitDepth == 16) {
-        
         std::vector<int16_t> rawAudioData(dataSize / sizeof(int16_t));
         inputFile.read(reinterpret_cast<char*>(rawAudioData.data()), dataSize);
-
-        
         audioData.reserve(rawAudioData.size());
         for (int16_t sample : rawAudioData) {
-            audioData.push_back(static_cast<double>(sample));
+            audioData.push_back(static_cast<float>(sample));
         }
     }
     else if (bitDepth == 32) {
-        
         std::vector<int32_t> rawAudioData(dataSize / sizeof(int32_t));
         inputFile.read(reinterpret_cast<char*>(rawAudioData.data()), dataSize);
-
-        
         audioData.reserve(rawAudioData.size());
         for (int32_t sample : rawAudioData) {
-            audioData.push_back(static_cast<double>(sample));
+            audioData.push_back(static_cast<float>(sample));
         }
     }
     else {
@@ -79,46 +68,68 @@ void processWavFile(const std::string& inputFilePath, const std::string& outputF
     }
     inputFile.close();
 
-    
-    printRawData(audioData, "Raw Data Before Processing:", 10);
+    std::vector<size_t> chunkSizes = divideIntoChunks(audioData.size(), numThreads);
 
-    size_t chunkSize = audioData.size() / 3;
-    size_t numChunks = 3;
     std::vector<std::thread> threads;
+    size_t offset = 0;
 
-    for (size_t i = 0; i < numChunks; ++i) {
-        double* chunkStart = &audioData[i * chunkSize];
-        std::cout << "Creating thread for chunk " << i << " at address: " << chunkStart << std::endl; 
-        threads.emplace_back(processChunk, chunkStart);
+    if (choice == 1) {
+        auto startAsm = std::chrono::high_resolution_clock::now(); //   POCZATEK CZASU DLA ASM
+
+        for (size_t i = 0; i < numThreads; ++i) {
+            float* chunkStart = &audioData[offset];
+            threads.emplace_back(processChunkAsm, chunkStart, chunkSizes[i]);
+            offset += chunkSizes[i];
+        }
+
+        for (auto& thread : threads) {
+            thread.join();
+        }
+
+        auto endAsm = std::chrono::high_resolution_clock::now(); //     KONIEC CZASU DLA ASM
+        std::chrono::duration<float> durationAsm = endAsm - startAsm;//obliczenia czasu
+        std::cout << "Assembly processing time: " << durationAsm.count() << " seconds" << std::endl;//wysweitlanie czasu
+
+        threads.clear();
     }
+    else if (choice == 2) {
+        auto startCpp = std::chrono::high_resolution_clock::now(); //    START CZASU CPP
 
-    for (auto& thread : threads) {
-        thread.join();
-        std::cout << "Thread joined." << std::endl; 
+        for (size_t i = 0; i < numThreads; ++i) {
+            float* chunkStart = &audioData[offset];
+            threads.emplace_back(processChunkCpp, chunkStart, chunkSizes[i]);
+            offset += chunkSizes[i];
+        }
+
+        for (auto& thread : threads) {
+            thread.join();
+        }
+
+        auto endCpp = std::chrono::high_resolution_clock::now(); // KONIEC CZASU CPP
+        std::chrono::duration<double> durationCpp = endCpp - startCpp;//obliczenie czasu cpp
+        std::cout << "C++ processing time: " << durationCpp.count() << " seconds" << std::endl;//wyswietlenie czasu cpp
     }
+    else {
+        std::cout << "Blad!" << std::endl;
+    }
+   
 
-    
-    printRawData(audioData, "Raw Data After Processing:", 10);
-
-    
     std::ofstream outputFile(outputFilePath, std::ios::binary);
     if (!outputFile) {
         std::cerr << "Could not open output file!" << std::endl;
         return;
     }
 
-    outputFile.write(header, 44); 
+    outputFile.write(header, 44);
 
     if (bitDepth == 16) {
-        
-        for (double sample : audioData) {
+        for (float sample : audioData) {
             int16_t intSample = static_cast<int16_t>(sample);
             outputFile.write(reinterpret_cast<const char*>(&intSample), sizeof(int16_t));
         }
     }
     else if (bitDepth == 32) {
-        
-        for (double sample : audioData) {
+        for (float sample : audioData) {
             int32_t intSample = static_cast<int32_t>(sample);
             outputFile.write(reinterpret_cast<const char*>(&intSample), sizeof(int32_t));
         }
@@ -134,6 +145,14 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    processWavFile(argv[1], argv[2]);
+    size_t numThreads;
+    int choice;
+    std::cout << "Enter the number of threads for processing: ";
+    std::cin >> numThreads;
+    std::cout << std::endl << "1. Assembly 2. C++" << std::endl;
+    std::cin >> choice;
+
+    processWavFile(argv[1], argv[2], numThreads, choice);
+
     return 0;
 }

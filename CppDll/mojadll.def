@@ -1,2 +1,2 @@
 LIBRARY CppDll
-EXPORTS AddNumbers
+EXPORTS ModifyBitsCpp
