@@ -7,6 +7,7 @@ The program accepts a WAV file as input and processes it through functions in dy
 - Link between main application and DLLs
 - Providing pointers to data for assembly function
 - Multiple threads
+- The FIR algorithm in C++ for applying bandpass filter
 - The FIR algorithm in assembly for applying bandpass filter
 
 ## What is not yet done
