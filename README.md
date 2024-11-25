@@ -6,8 +6,10 @@ The program accepts a WAV file as input and processes it through functions in dy
 ## What has been done
 - Link between main application and DLLs
 - Providing pointers to data for assembly function
+- Multiple threads
+- The FIR algorithm in assembly for applying bandpass filter
 
 ## What is not yet done
-- The FIR algorithm in assembly for applying bandpass filter
-- Multiple threads
-- Interface?
+- Optimalization
+- Cleaning up the code in application project
+- Interface
