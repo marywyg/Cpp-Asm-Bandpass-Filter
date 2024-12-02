@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstdint>
 #include <chrono>
+#include <vector>
 
 extern "C" void ModifyBitsAsm(float* chunkPointer, size_t numElements);
 extern "C" void ModifyBitsCpp(float* chunkPointer, size_t numElements);
