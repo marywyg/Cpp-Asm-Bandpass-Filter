@@ -1,88 +1,48 @@
 .CONST
-filterCoefficients REAL4 -0.0000, 0.0003
-                      REAL4 0.0008, 0.0011
-                      REAL4 0.0008, 0.0002
-                      REAL4 -0.0003, -0.0002
-                      REAL4 0.0006, 0.0015
-                      REAL4 0.0015, 0.0004
-                      REAL4 -0.0011, -0.0018
-                      REAL4 -0.0008, 0.0011
-                      REAL4 0.0021, 0.0007
-                      REAL4 -0.0027, -0.0055
-                      REAL4 -0.0053, -0.0020
-                      REAL4 0.0012, 0.0007
-                      REAL4 -0.0046, -0.0112
-                      REAL4 -0.0138, -0.0100
-                      REAL4 -0.0029, 0.0002
-                      REAL4 -0.0053, -0.0169
-                      REAL4 -0.0258, -0.0240
-                      REAL4 -0.0121, -0.0006
-                      REAL4 -0.0017, -0.0181
-                      REAL4 -0.0385, -0.0452
-                      REAL4 -0.0294, -0.0016
-                      REAL4 0.0136, -0.0037
-                      REAL4 -0.0483, -0.0873
-                      REAL4 -0.0786, -0.0022
-                      REAL4 0.1208, 0.2344
-                      REAL4 0.2805, 0.2344
-                      REAL4 0.1208, -0.0022
-                      REAL4 -0.0786, -0.0873
-                      REAL4 -0.0483, -0.0037
-                      REAL4 0.0136, -0.0016
-                      REAL4 -0.0294, -0.0452
-                      REAL4 -0.0385, -0.0181
-                      REAL4 -0.0017, -0.0006
-                      REAL4 -0.0121, -0.0240
-                      REAL4 -0.0258, -0.0169
-                      REAL4 -0.0053, 0.0002
-                      REAL4 -0.0029, -0.0100
-                      REAL4 -0.0138, -0.0112
-                      REAL4 -0.0046, 0.0007
-                      REAL4 0.0012, -0.0020
-                      REAL4 -0.0053, -0.0055
-                      REAL4 -0.0027, 0.0007
-                      REAL4 0.0021, 0.0011
-                      REAL4 -0.0008, -0.0018
-                      REAL4 -0.0011, 0.0004
-                      REAL4 0.0015, 0.0015
-                      REAL4 0.0006, -0.0002
-                      REAL4 -0.0003, 0.0002
-                      REAL4 0.0008, 0.0011
-                      REAL4 0.0008, 0.0003
-                      REAL4 -0.0000
+filterCoefficients REAL4 -0.0059, 0.0215, 0.1756, 0.3827, 0.3827, 0.1756, 0.0215, -0.0059
+
 .CODE
-    ;rcx = chunkPointer
-    ;rdx = numElements
+    ; rcx = chunkPointer
+    ; rdx = numElements
+
 ModifyBitsAsm PROC
     push rbx
     push rdi
     push rsi
-    xor rsi, rsi
+    xor rsi, rsi               ; i = 0
+
 outer_loop:
     cmp rsi, rdx
-    jae end_outer_loop
-    xorps xmm0, xmm0
-    xor rdi, rdi
-    lea rbx, filterCoefficients
-inner_loop:
-    cmp rdi, 99
-    jae end_inner_loop
-    mov rax, rsi
-    add rax, rdi
-    cmp rax, rdx
-    jae skip_add
-    movups xmm1, XMMWORD PTR [rcx + rax * 4]
-    movups xmm2, XMMWORD PTR [rbx + rdi * 4]
-    mulps xmm1, xmm2
-    addps xmm0, xmm1
+    jae end_outer_loop         ; if i >= numElements, exit outer loop
+    vpxor ymm0, ymm0, ymm0
 
-skip_add:
-    add rdi, 1
-    jmp inner_loop
+    ; inner loop index (j)
+    xor rdi, rdi
+
+    lea rbx, filterCoefficients 
+
+inner_loop:
+    mov r8, rsi                ; r8 = i
+    add r8, rdi                ; r8 = i + j
+    cmp r8, rdx
+    jae end_inner_loop
+
+    vbroadcastss ymm1, real4 ptr [rcx + r8 * 4]
+    vmovups ymm2, real4 ptr [rbx + rdi * 4] ; Load filterCoefficients[j] into ymm2
+    vmulps ymm1, ymm1, ymm2     ; ymm1 *= ymm2
+    vaddps ymm0, ymm0, ymm1     ; ymm0 += ymm1
+
+    ; Increment j (rdi)
+    inc rdi
+    cmp rdi, 8                 ; Compare j with the number of coefficients
+    jb inner_loop
 
 end_inner_loop:
-    movups XMMWORD PTR [rcx + rsi * 4], xmm0
-    add rsi, 1
+    ; Store the result back into chunkPointer[i]
+    vmovss real4 ptr [rcx + rsi * 4], xmm0
+
+    ; Increment i (rsi)
+    inc rsi
     jmp outer_loop
 
 end_outer_loop:
