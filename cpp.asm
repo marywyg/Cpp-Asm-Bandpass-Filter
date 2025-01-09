@@ -37,12 +37,10 @@ ModifyBitsCpp PROC					; COMDAT
 
 ; 5    : 
 ; 6    :     float filterCoefficients[] = {
-; 7    :      -0.0059,   0.0215,    0.1756,    0.3827,    0.3827,    0.1756,    0.0215, - 0.0059
+; 7    :      -0.0059f,   0.0215f,    0.1756f,    0.3827f,    0.3827f,    0.1756f,    0.0215f, - 0.0059f
 ; 8    : 
 ; 9    :     };
-; 10   : 
-; 11   : 
-; 12   :     for (size_t i = 0; i < numElements; ++i) {
+; 10   :     for (size_t i = 0; i < numElements; ++i) {
 
 	test	rdx, rdx
 	je	$LN3@ModifyBits
@@ -54,129 +52,129 @@ ModifyBitsCpp PROC					; COMDAT
 	movss	xmm5, DWORD PTR __real@3ec3f141
 $LL4@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8-2]
 	xorps	xmm1, xmm1
 	cmp	rax, rdx
 	jae	SHORT $LN15@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx-8]
 	mulss	xmm0, xmm2
 	subss	xmm1, xmm0
 $LN15@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8-1]
 	cmp	rax, rdx
 	jae	SHORT $LN18@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx-4]
 	mulss	xmm0, xmm3
 	addss	xmm1, xmm0
 $LN18@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	cmp	r8, rdx
 	jae	SHORT $LN20@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx]
 	mulss	xmm0, xmm4
 	addss	xmm1, xmm0
 $LN20@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	r9, QWORD PTR [r8+1]
 	cmp	r9, rdx
 	jae	SHORT $LN33@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx+4]
 	mulss	xmm0, xmm5
 	addss	xmm1, xmm0
 $LN33@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8+2]
 	cmp	rax, rdx
 	jae	SHORT $LN24@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx+8]
 	mulss	xmm0, xmm5
 	addss	xmm1, xmm0
 $LN24@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8+3]
 	cmp	rax, rdx
 	jae	SHORT $LN26@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx+12]
 	mulss	xmm0, xmm4
 	addss	xmm1, xmm0
 $LN26@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8+4]
 	cmp	rax, rdx
 	jae	SHORT $LN28@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx+16]
 	mulss	xmm0, xmm3
 	addss	xmm1, xmm0
 $LN28@ModifyBits:
 
-; 13   :         float result = 0.f;
-; 14   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
-; 15   :             if (i + j < numElements) {
+; 11   :         float result = 0.f;
+; 12   :         for (size_t j = 0; j < std::size(filterCoefficients); ++j) {
+; 13   :             if (i + j < numElements) {
 
 	lea	rax, QWORD PTR [r8+5]
 	cmp	rax, rdx
 	jae	SHORT $LN30@ModifyBits
 
-; 16   :                 result += chunkPointer[i + j] * filterCoefficients[j];
+; 14   :                 result += chunkPointer[i + j] * filterCoefficients[j];
 
 	movss	xmm0, DWORD PTR [rcx+20]
 	mulss	xmm0, xmm2
 	subss	xmm1, xmm0
 $LN30@ModifyBits:
 
-; 17   :             }
-; 18   :         }
-; 19   :         chunkPointer[i] = result;
+; 15   :             }
+; 16   :         }
+; 17   :         chunkPointer[i] = result;
 
 	movss	DWORD PTR [rcx-8], xmm1
 	lea	rax, QWORD PTR [r9-2]
@@ -186,8 +184,8 @@ $LN30@ModifyBits:
 	jb	$LL4@ModifyBits
 $LN3@ModifyBits:
 
-; 20   :     }
-; 21   : }
+; 18   :     }
+; 19   : }
 
 	ret	0
 ModifyBitsCpp ENDP

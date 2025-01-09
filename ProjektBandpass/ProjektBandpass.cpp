@@ -35,7 +35,7 @@ void processWavFile(const std::string& inputFilePath, const std::string& outputF
         std::cerr << "Could not open input file!" << std::endl;
         return;
     }
-    
+
     char header[44];
     inputFile.read(header, 44);
 
@@ -113,7 +113,7 @@ void processWavFile(const std::string& inputFilePath, const std::string& outputF
     else {
         std::cout << "Blad!" << std::endl;
     }
-   
+
 
     std::ofstream outputFile(outputFilePath, std::ios::binary);
     if (!outputFile) {
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl << "1. Assembly 2. C++" << std::endl;
     std::cin >> choice;
     processWavFile(argv[1], argv[2], numThreads, choice);
-    alignas(16) std::vector<float> audioData = { 1.0f, 2.0f, 3.0f, 4.0f };
+    alignas(16) std::vector<float> audioData = { 1.0f, 2.0f, 3.0f, 4.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f };
     std::cout << "Przed przetworzeniem w asm:" << std::endl;
     printData(audioData, "Audio Data");
     size_t numElements = audioData.size();
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
     ModifyBitsAsm(audioData.data(), numElements);
     std::cout << "Po przetworzeniu w asm:" << std::endl;
     printData(audioData, "Audio Data");
-    alignas(16) std::vector<float> audioData2 = { 1.0f, 2.0f, 3.0f, 4.0f };
+    alignas(16) std::vector<float> audioData2 = { 1.0f, 2.0f, 3.0f, 4.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f };
     std::cout << "Przed przetworzeniem w cpp:" << std::endl;
     printData(audioData2, "Audio Data");
     size_t numElements2 = audioData2.size();

@@ -13,6 +13,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AsmDll", "AsmDll\AsmDll.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppDll", "CppDll\CppDll.vcxproj", "{EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUIBandpass", "GUIBandpass\GUIBandpass.vcxproj", "{240A1912-9B25-4260-8CD2-85C395272640}"
+	ProjectSection(ProjectDependencies) = postProject
+		{11B3D785-978C-4190-B196-A5720E1F818E} = {11B3D785-978C-4190-B196-A5720E1F818E}
+		{EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E} = {EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +51,14 @@ Global
 		{EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E}.Release|x64.Build.0 = Release|x64
 		{EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E}.Release|x86.ActiveCfg = Release|Win32
 		{EBB3B8B2-5A04-4DE7-8C78-C7FB59EA2F8E}.Release|x86.Build.0 = Release|Win32
+		{240A1912-9B25-4260-8CD2-85C395272640}.Debug|x64.ActiveCfg = Debug|x64
+		{240A1912-9B25-4260-8CD2-85C395272640}.Debug|x64.Build.0 = Debug|x64
+		{240A1912-9B25-4260-8CD2-85C395272640}.Debug|x86.ActiveCfg = Debug|Win32
+		{240A1912-9B25-4260-8CD2-85C395272640}.Debug|x86.Build.0 = Debug|Win32
+		{240A1912-9B25-4260-8CD2-85C395272640}.Release|x64.ActiveCfg = Release|x64
+		{240A1912-9B25-4260-8CD2-85C395272640}.Release|x64.Build.0 = Release|x64
+		{240A1912-9B25-4260-8CD2-85C395272640}.Release|x86.ActiveCfg = Release|Win32
+		{240A1912-9B25-4260-8CD2-85C395272640}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

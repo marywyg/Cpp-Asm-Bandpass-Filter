@@ -15,20 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ProjektBandpass.cpp">
+    <ClCompile Include="GUI.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ProjektBandpass\ProjektBandpass.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\StarWars3.wav">
-      <Filter>Pliki zasobów</Filter>
-    </Media>
-    <Media Include="..\..\..\..\Downloads\file_example_WAV_1MG.wav">
-      <Filter>Pliki zasobów</Filter>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ProjektBandpass.h">
+    <ClInclude Include="GUI.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ProjektBandpass\ProjektBandpass.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
