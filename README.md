@@ -9,8 +9,8 @@ The program accepts a WAV file as input and processes it through functions in dy
 - Multiple threads
 - The FIR algorithm in C++ for applying bandpass filter
 - The FIR algorithm in assembly for applying bandpass filter
+- GUI interface made using Windows Forms
 
-## What is not yet done
-- Optimalization
-- Cleaning up the code in application project
-- Interface
+## To-do
+- Clean up of code
+- Removal of old console project
